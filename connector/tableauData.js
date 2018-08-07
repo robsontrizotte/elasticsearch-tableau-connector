@@ -30,23 +30,28 @@ var tableauData = (function () {
         return connectionData;
     };
 
-    var updateAuthCredentials = function(useBasicAuth, useSyncClientWorkaround, username, password){
+    var updateAuthCredentials = function (useBasicAuth, useSyncClientWorkaround, username, password, useAwsSignatureV4, awsRegion, awsAccessKey, awsSecret) {
 
         var connectionData = _data();
 
         connectionData.elasticsearchAuthenticate = useBasicAuth;
         connectionData.useSyncClientWorkaround = useSyncClientWorkaround;
 
+        connectionData.useAwsSignatureV4 = useAwsSignatureV4;
+        connectionData.awsRegion = awsRegion;
+        connectionData.awsAccessKey = awsAccessKey;
+        connectionData.awsSecret = awsSecret;
+
         // Don't store username/password in the tableau.username/tableau.password properties
         // as these cause issues with the Online Sync Client
-        if(!useSyncClientWorkaround){
+        if (!useSyncClientWorkaround) {
             tableau.username = username;
             tableau.password = password;
 
             delete connectionData.elasticsearchUsername;
             delete connectionData.elasticsearchPassword;
         }
-        else{
+        else {
             tableau.username = null;
             tableau.password = null;
 

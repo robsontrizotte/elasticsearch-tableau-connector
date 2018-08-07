@@ -9,6 +9,10 @@ var app = (function () {
         self.useSyncClientWorkaround = ko.observable(false);
         self.username = ko.observable();
         self.password = ko.observable();
+        self.useAwsSignatureV4 = ko.observable(false);
+        self.awsRegion = ko.observable();
+        self.awsAccessKey = ko.observable();
+        self.awsSecret = ko.observable();
         self.elasticsearchUrl = ko.observable();
         self.elasticsearchIndex = ko.observable();
         self.elasticsearchAliasIndex = ko.observable();
@@ -270,6 +274,10 @@ var app = (function () {
                 elasticsearchAuthenticate: self.useBasicAuthentication(),
                 elasticsearchUsername: self.username(),
                 elasticsearchPassword: self.password(),
+                elasticsearchAwsSignatureV4: self.useAwsSignatureV4(),
+                elasticsearchAwsRegion: self.awsRegion(),
+                elasticsearchAwsAccessKey: self.awsAccessKey(),
+                elasticsearchAwsSecret: self.awsSecret(),
                 elasticsearchIndex: self.elasticsearchIndex(),
                 elasticsearchAliasIndex: self.elasticsearchAliasIndex(),
                 elasticsearchUnionAliasTypes: self.elasticsearchUnionAliasTypes(),
@@ -676,6 +684,29 @@ var app = (function () {
                 }
             }
 
+            if (self.useAwsSignatureV4()) {
+                if (!self.awsSecret()) {
+                    validation.messages.push("AWS Secret is required");
+                    validation.awsSecret = true
+                } else {
+                    validation.awsSecret = false
+                }
+
+                if (!self.awsRegion()) {
+                    validation.messages.push("AWS Region is required");
+                    validation.awsRegion = true
+                } else {
+                    validation.awsRegion = false
+                }
+
+                if (!self.awsAccessKey()) {
+                    validation.messages.push("AWS Secret is required");
+                    validation.awsAccessKey = true
+                } else {
+                    validation.awsAccessKey = false
+                }
+            }
+
             if (!self.elasticsearchUrl()) {
                 validation.messages.push("Elasticsearch URL is required");
                 validation.elasticsearchUrl = true
@@ -783,19 +814,42 @@ var app = (function () {
             vm.useSyncClientWorkaround(false);
         }
 
-        tableauData.updateAuthCredentials(vm.useBasicAuthentication(), vm.useSyncClientWorkaround(), vm.username(), vm.password());
+        tableauData.updateAuthCredentials(vm.useBasicAuthentication(), vm.useSyncClientWorkaround(), vm.username(), vm.password(), vm.useAwsSignatureV4(), vm.awsRegion(), vm.awsAccessKey(), vm.awsSecret());
     });
 
     vm.username.subscribe(function (newValue) {
-        tableauData.updateAuthCredentials(vm.useBasicAuthentication(), vm.useSyncClientWorkaround(), vm.username(), vm.password());
+        tableauData.updateAuthCredentials(vm.useBasicAuthentication(), vm.useSyncClientWorkaround(), vm.username(), vm.password(), vm.useAwsSignatureV4(), vm.awsRegion(), vm.awsAccessKey(), vm.awsSecret());
     });
 
     vm.password.subscribe(function (newValue) {
-        tableauData.updateAuthCredentials(vm.useBasicAuthentication(), vm.useSyncClientWorkaround(), vm.username(), vm.password());
+        tableauData.updateAuthCredentials(vm.useBasicAuthentication(), vm.useSyncClientWorkaround(), vm.username(), vm.password(), vm.useAwsSignatureV4(), vm.awsRegion(), vm.awsAccessKey(), vm.awsSecret());
     });
 
     vm.useSyncClientWorkaround.subscribe(function (newValue) {
-        tableauData.updateAuthCredentials(vm.useBasicAuthentication(), vm.useSyncClientWorkaround(), vm.username(), vm.password());
+        tableauData.updateAuthCredentials(vm.useBasicAuthentication(), vm.useSyncClientWorkaround(), vm.username(), vm.password(), vm.useAwsSignatureV4(), vm.awsRegion(), vm.awsAccessKey(), vm.awsSecret());
+    });
+
+    vm.useAwsSignatureV4.subscribe(function (newValue) {
+
+        if (newValue === false) {
+            vm.awsRegion("");
+            vm.awsAccessKey("");
+            vm.awsSecret("");
+        }
+
+        tableauData.updateAuthCredentials(vm.useBasicAuthentication(), vm.useSyncClientWorkaround(), vm.username(), vm.password(), vm.useAwsSignatureV4(), vm.awsRegion(), vm.awsAccessKey(), vm.awsSecret());
+    });
+
+    vm.awsRegion.subscribe(function (newValue) {
+        tableauData.updateAuthCredentials(vm.useBasicAuthentication(), vm.useSyncClientWorkaround(), vm.username(), vm.password(), vm.useAwsSignatureV4(), vm.awsRegion(), vm.awsAccessKey(), vm.awsSecret());
+    });
+
+    vm.awsAccessKey.subscribe(function (newValue) {
+        tableauData.updateAuthCredentials(vm.useBasicAuthentication(), vm.useSyncClientWorkaround(), vm.username(), vm.password(), vm.useAwsSignatureV4(), vm.awsRegion(), vm.awsAccessKey(), vm.awsSecret());
+    });
+
+    vm.awsSecret.subscribe(function (newValue) {
+        tableauData.updateAuthCredentials(vm.useBasicAuthentication(), vm.useSyncClientWorkaround(), vm.username(), vm.password(), vm.useAwsSignatureV4(), vm.awsRegion(), vm.awsAccessKey(), vm.awsSecret());
     });
 
     var updateIncrementalRefreshColumns = function(err, fieldData){

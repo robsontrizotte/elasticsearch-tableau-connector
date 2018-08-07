@@ -70,6 +70,46 @@
                     <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" data-bind="visible: validation().password"></span>
                     <span class="sr-only" data-bind="if: validation().password">(error)</span>
                 </div>
+
+                <!--- AWS Creds -->
+                <div class="checkbox">
+                    <label>
+                        <input id="cbUseAwsSignatureV4" type="checkbox" data-bind="checked: useAwsSignatureV4">Use AWS Signature V4?
+                    </label>
+                </div>
+                <fieldset  data-bind="visible: useAwsSignatureV4" style="background-color: rgb(239, 239, 239); padding: 12px; border-radius: 8px; margin-bottom: 10px; margin-top: 10px;">
+                    <div class="form-group required basic-auth-control"
+                         data-bind="visible: useAwsSignatureV4, css: { 'has-error': validation().awsRegion, 'has-feedback': validation().awsRegion }">
+                        <label for="inputUsername">AWS Region</label>
+                        <input class="form-control" id="inputAwsRegion" placeholder="AWS Region" autocomplete="off"
+                               data-bind="value: awsRegion">
+                        <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"
+                              data-bind="visible: validation().awsRegion"></span>
+                        <span class="sr-only" data-bind="if: validation().awsRegion">(error)</span>
+                    </div>
+
+                    <div class="form-group required basic-auth-control"
+                         data-bind="visible: useAwsSignatureV4, css: { 'has-error': validation().awsRegion, 'has-feedback': validation().awsSecret }">
+                        <label for="inputUsername">AWS Secret</label>
+                        <input class="form-control" id="inputAwsSecret" placeholder="AWS Secret" autocomplete="off"
+                               data-bind="value: awsSecret">
+                        <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"
+                              data-bind="visible: validation().awsSecret"></span>
+                        <span class="sr-only" data-bind="if: validation().awsSecret">(error)</span>
+                    </div>
+
+                    <div class="form-group required basic-auth-control"
+                         data-bind="visible: useAwsSignatureV4, css: { 'has-error': validation().awsAccessKey, 'has-feedback': validation().awsAccessKey }">
+                        <label for="inputUsername">AWS Access Key</label>
+                        <input class="form-control" id="inputAwsAccessKey" placeholder="AWS Access Key" autocomplete="off"
+                               data-bind="value: awsAccessKey">
+                        <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"
+                              data-bind="visible: validation().awsAccessKey"></span>
+                        <span class="sr-only" data-bind="if: validation().awsAccessKey">(error)</span>
+                    </div>
+                </fieldset>
+
+
                     <div class="form-group required" data-bind="css: { 'has-error': validation().elasticsearchUrl, 'has-feedback': validation().elasticsearchUrl }">
                     <label for="inputElasticsearchUrl">Elasticsearch URL</label>
                     <input class="form-control" id="inputElasticsearchUrl" placeholder="Elasticsearch URL" data-bind="value: elasticsearchUrl">
